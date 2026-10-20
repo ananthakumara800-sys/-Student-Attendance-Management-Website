@@ -1,0 +1,186 @@
+HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px #cccccc;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #1e3a8a;
+        }
+
+        input, button, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #dbeafe;
+        }
+
+        .note {
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Student Management System</h1>
+    <h2>Attendance Management</h2>
+
+    <form id="studentForm">
+        <input type="text" id="studentName"
+               placeholder="Enter Student Name" required>
+
+        <input type="text" id="rollNumber"
+               placeholder="Enter Roll Number" required>
+
+        <label for="session">Attendance Session</label>
+        <select id="session">
+            <option value="Morning">Morning</option>
+            <option value="Afternoon">Afternoon</option>
+        </select>
+
+        <label for="attendance">Attendance</label>
+        <select id="attendance">
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+        </select>
+
+        <button type="submit">Add Attendance Record</button>
+    </form>
+
+    <h2>Attendance Records</h2>
+    <p id="totalStudents">Total Records: 0</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Roll Number</th>
+                <th>Session</th>
+                <th>Attendance</th>
+            </tr>
+        </thead>
+        <tbody id="studentList"></tbody>
+    </table>
+
+    <p class="note">
+        Demo version only. Login security and database
+        must be configured before real use.
+    </p>
+
+</div>
+
+<script>
+    const form = document.getElementById("studentForm");
+    const studentList = document.getElementById("studentList");
+
+    let records = [];
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const name = document.getElementById("studentName").value.trim();
+        const roll = document.getElementById("rollNumber").value.trim();
+        const session = document.getElementById("session").value;
+        const attendance = document.getElementById("attendance").value;
+
+        if (!name || !roll) {
+            alert("Please enter student details.");
+            return;
+        }
+
+        const exists = records.some(function(record) {
+            return record.roll.toLowerCase() === roll.toLowerCase()
+                && record.session === session;
+        });
+
+        if (exists) {
+            alert("This student already has a record for this session.");
+            return;
+        }
+
+        records.push({
+            name: name,
+            roll: roll,
+            session: session,
+            attendance: attendance
+        });
+
+        displayRecords();
+        form.reset();
+    });
+
+    function displayRecords() {
+        studentList.innerHTML = "";
+
+        records.forEach(function(record) {
+            const row = document.createElement("tr");
+
+            [
+                record.name,
+                record.roll,
+                record.session,
+                record.attendance
+            ].forEach(function(value) {
+                const cell = document.createElement("td");
+                cell.textContent = value;
+                row.appendChild(cell);
+            });
+
+            studentList.appendChild(row);
+        });
+
+        document.getElementById("totalStudents").textContent =
+            "Total Records: " + records.length;
+    }
+</script>
+
+</body>
+</html>
+```
